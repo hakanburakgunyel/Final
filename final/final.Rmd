@@ -25,7 +25,7 @@ urlcolor: blue
 fontsize: 12pt
 biblio-style: apalike
 abstract: |
-  Bu bölümde çalışmanızın özetini yazınız.
+  Bu çalışma İBB Açık Veri Portalından alınan “Deprem Senaryosu Analiz Sonuç” verisinden hareketle İstanbul kentinde beklenen, büyüklüğü 7.5 Mw olan senaryoya göre hazırlanmıştır. Çalışmada depremin zarar verebileceği binalara ve altyapı stoğu, yaşanabilecek can kayıpları ve yaralanmalar, ve geçici barınma değişkenleri üzerinde durulmuştur. İstanbul’da yıkıcı bir depremin meydana gelmesi hem ekonomik hem endüstriyel hem de sosyal ve kültürel  faaliyetleri durma noktasına getireceğinden gerekli önlemler alınmalıdır.
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FALSE)
@@ -36,15 +36,7 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 <!-- ======================================================================= -->
 [^1]: 21080548, [Github Repo](https://github.com/hakanburakgunyel/Final.git)
 
-# Final Hakkında Önemli Bilgiler
 
-\colorbox{BurntOrange}{GITHUB REPO BAĞLANTINIZI BU DOSYANIN 37. SATIRINA YAZINIZ!}
-
-**Proje gönderimi, Github repo linki ile birlikte ekampus sistemine bir zip dosyası yüklenerek yapılacaktır. Sisteme zip dosyası yüklemezseniz ve Github repo linki vermezseniz ara sınav ve final sınavlarına girmemiş sayılırsınız.**
-
-**Proje klasörünüzü sıkıştırdıktan sonra (`OgrenciNumarasi.zip` dosyası) 9 Haziran 2023 23:59'a kadar *ekampus.ankara.edu.tr* adresine yüklemeniz gerekmektedir.**
-
-\colorbox{WildStrawberry}{Daha fazla bilgi için proje klasöründeki README.md dosyasını okuyunuz.}
 
 # Giriş
 6 Şubat 2023 tarihinde merkez üssü Kahramanmaraş olan, iki büyük şiddetli deprem gerçekleşmiştir. Resmi rakamlara göre yaklaşık 50.000 vatandaşımız hayatını kaybetmiştir. Yaşanan bu felaketten sonra akıllara beklenen İstanbul depreminin ne zaman olacağı, yaratacağı
@@ -72,17 +64,19 @@ Deprem tehlikesi, arazi kullanımı, demografik yapı ve ekonomik yapı depremin
 Deprem riskine karşı insanlara farkındalık eğitimi verilmeli; kentsel dönüşüm ve altyapı çalışmaları yapılarak önlemler alınmalıdır. Depremle ilgili gerekli kanuni önlemler alınmalı, zorunlu deprem sigortası vatandaşlara yaptırılmalıdır. Türkiye’nin en önemli sanayi ve finans merkezi olan İstanbul’da yıkıcı bir depremin meydana gelmesi ekonomi ve endüstri faaliyetlerini durma noktasına getirebilir. [@erdik2008earthquake]
 
 # Veri 
-Bu bölümde çalışmanızda kullandığınız veri setinin kaynağını, ham veri üzerinde herhangi bir işlem yaptıysanız bu işlemleri ve veri seti ile ilgili özet istatistikleri tartışınız. Bu bölümde tüm değişkenlere ait özet istatistikleri (ortalama, standart sapma, minimum, maksimum, vb. değerleri) içeren bir tablo (Tablo \ref{tab:ozet}) olması zorunludur. Tablolarınıza gerekli göndermeleri bir önceki cümlede gösterildiği gibi yapınız. [@perkins:1991]
+Veri seti, İstanbul Büyükşehir Belediyesi’nin İBB Açık Veri Portalı Üzerinden yayınladığı “Deprem Senaryosu Analiz Sonuçları” verisinden oluşmaktadır. Veri seti İstanbul’un ilçeleri; mahalleleri; çok ağır, ağır, orta ve hafif hasarlı bina sayısı; can kaybı sayısı; ağır yaralı sayısı; hafif yaralı sayısı; hastanede tedavi sayısı; doğalgaz borusu, atık su borusu ve içme suyu borusu hasarı sayısı; geçici barınma sayıları değişkenlerini içeren 960 gözlemden oluşan bir veri setidir. Gözlemlerin içinden çalışma kolaylığı açısından İstanbul’un nüfus bakımından en kalabalık ilçelerinden üç tanesi ( Esenyurt, Küçükçekmece, Pendik) seçilmiştir.
 
-Analize ait R kodları bu bölümde başlamalıdır. Bu bölümde veri setini R'a aktaran ve özet istatistikleri üreten kodlar yer almalıdır.
+Özet istatistikler aracılığıyla yaşanan deprem sonrası can kaybı sayısı, yaralanma sayısı, binalardaki hasarlar ve altyapı sistemleri hakkında ortalama, standart sapma, minimum, medyan ve maksimum değerleri hakkında bilgi vermektedir. Veri setine ait (Tablo \ref{tab:ozet})’de verilen özet istatistiklere göre çıkarımlar yapılabilir. Özet tablo bina hasarları bakımından incelendiğinde (çok ağır, ağır, orta, hafif hasarlı) hasarın şiddeti çok ağır hasarlıdan hafif hasarlıya geldikçe maksimum ve ortalama değerlerde doğru orantılı olarak bir artış gözlemleyebiliriz. Binaların çoğu orta ve hafif hasarlıdır.  Buradan bina stoklarının yıkıcı etkisinin genel olarak daha düşük olduğu varsayımı yapılabilir. Boru hasarı bakımından incelendiğinde atık su boru hasarının, doğalgaz boru hasarına göre daha fazla olduğunu görmekteyiz. Doğalgaz boru hattı atık su boru hattı yapımına göre daha maliyetli olduğu için daha sağlam yapıldığı varsayımını yapabiliriz.
 
-```{r}
+
+```{r, echo=FALSE}
 library(tidyverse)
 library(here)
-survey <- read_csv(here("../data/survey.csv"))
+dt <- readxl::read_xlsx("C:/Users/Admin/Downloads/Final/data/data1.xlsx")
+
 ```
 
-Rmd dosyasında kod bloklarının bazılarında kod seçeneklerinin düzenlendiğine dikkat edin. 
+ 
 
 ```{r, echo=FALSE}
 library(xtable) 
@@ -91,11 +85,11 @@ library(summarytools)
 st_options(lang = "tr")
 ```
 
-`echo=FALSE` seçeneği ile kodların türetilen pdf dosyasında görünmesini engelleyin ve sonuçlarınızı tablo halinde rapor edin.
+
 
 ```{r results='asis', echo=FALSE}
-survey %>%
-  select("sex", "credits", "handedness", "height", "handspan") %>% 
+dt %>%
+  select("cok_agir_hasarli_bina_sayisi", "agir_hasarli_bina_sayisi", "orta_hasarli_bina_sayisi", "hafif_hasarli_bina_sayisi", "can_kaybi_sayisi", "agir_yarali_sayisi", "hastanede_tedavi_sayisi", "dogalgaz_boru_hasari", "icme_suyu_boru_hasari", "atik_su_boru_hasari", "gecici_barinma", "hafif_yarali_sayisi") %>% 
   descr(stats = c("mean", "sd", "min", "med", "max"), transpose = TRUE) %>% 
   xtable(caption = "Özet İstatistikler",
          label = "tab:ozet",
@@ -105,9 +99,7 @@ survey %>%
 
 
 # Yöntem ve Veri Analizi
-Bu bölümde veri setindeki bilgileri kullanarak çalışmanın amacına ulaşmak için kullanılacak yöntemleri açıklayın. Derste işlenen/işlenecek olan analiz yöntemlerinden (Hipotez testleri ve korelasyon analizi gibi) çalışmanın amacına ve veri setine uygun olanlar bu bölümde kullanılmalıdır. [@newbold:2003; @ozsoy:2010; @ozsoy:2014]
-
-Örneğin, regresyon analizi gerçekleştiriyorsanız tahmin ettiğiniz denklemi bu bölümde tartışınız. Denklemlerinizi ve matematiksel ifadeleri $LaTeX$ kullanarak yazınız.
+Regresyon analizine göre “can kaybı sayısı” bağımlı değişkendir. “Hafif hasarlı bina sayısı”, “orta hasarlı bina sayısı”, “ağır hasarlı bina sayısı” ve “çok ağır hasarlı bina sayısı” bağımsız değişken olarak belirlenmiştir. Analiz sonucu bağımsız değişkenlerin bağımlı değişken üzerinde anlamlı bir ilişkiye sahip olduğu belirlenmiştir.
 
 $$
 Y_t = \beta_0 + \beta_N N_t + \beta_P P_t + \beta_I I_t + \varepsilon_t
@@ -116,18 +108,47 @@ $$
 Bu bölümde analize ilişkin farklı tablolar ve grafiklere yer verilmelidir. Çalışmanıza uygun biçimde histogram, nokta grafiği (Şekil \@ref(fig:plot) gibi), kutu grafiği, vb. grafikleri bu bölüme ekleyiniz. Şekillerinize de gerekli göndermeleri bir önceki cümlede gösterildiği gibi yapınız.
 
 
-```{r plot, fig.align='center', fig.cap='Muhteşem Bir Grafik'}
-survey %>% 
-  ggplot(aes(x = handedness, y = handspan)) +
-  geom_point() +
-  geom_smooth() +
-  scale_x_continuous("Handedness") + 
-  scale_y_continuous("Handspan")
+```{r , echo=FALSE}
+cok_agir_hasarli_can_kaybi <- cor(dt$cok_agir_hasarli_bina_sayisi, dt$can_kaybi_sayisi, method = "pearson")
+agir_hasarli_can_kaybi <- cor(dt$agir_hasarli_bina_sayisi, dt$can_kaybi_sayisi, method = "pearson")
+orta_hasarli_can_kaybi <- cor(dt$orta_hasarli_bina_sayisi, dt$can_kaybi_sayisi, method = "pearson")
+hafif_hasarli_can_kaybi <- cor(dt$hafif_hasarli_bina_sayisi, dt$can_kaybi_sayisi, method = "pearson")
+
+
+cat("Çok ağır hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", cok_agir_hasarli_can_kaybi, "\n")
+cat("Ağır hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", agir_hasarli_can_kaybi, "\n")
+cat("Orta hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", orta_hasarli_can_kaybi, "\n")
+cat("Hafif hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", hafif_hasarli_can_kaybi, "\n")
+```
+```{r , echo=FALSE}
+model <- lm(can_kaybi_sayisi~cok_agir_hasarli_bina_sayisi + agir_hasarli_bina_sayisi + dt$orta_hasarli_bina_sayisi + hafif_hasarli_bina_sayisi, data = dt)
+
+summary(model)
+
+
+
+
+
+```
+Bu çıktıya göre bazı çıkarımlar yapmak mümkündür. “residuals” bölümü bize artıklar hakkında bilgi vermektedir. İlk sütun parametrelerin tahminlenen değerlerini, ikinci sütun parametrelerin standart hata değerlerini, üçüncü ve dördüncü sütun ise sırasıyla t ve p değerlerini göstermektedir. Parametrelerin sıfıra eşit olup olmadığı hipotezini test etmek için bu değerler kullanılmıştır. Çoklu R-kare değeri belirtme katsayısını ifade eder. F -statistic ve p-value değerleri eğim parametresinin sıfıra eşit olup olmadığı hipotezini test etmek için kullanılmıştır. 
+
+
+
+
+```{r, echo=FALSE}
+
+
+ggplot(dt , aes(x=dt$cok_agir_hasarli_bina_sayisi + dt$agir_hasarli_bina_sayisi + dt$orta_hasarli_bina_sayisi + dt$hafif_hasarli_bina_sayisi, y=dt$can_kaybi_sayisi))+
+         geom_point(size=4, color="blue", shape=20)+ geom_smooth(method=lm, se=FALSE, color="black")
+
 ```
 
 
+
 # Sonuç
-Bu bölümde çalışmanızın sonuçlarını özetleyiniz. Sonuçlarınızın başlangıçta belirlediğiniz araştırma sorusuna ne derece cevap verdiğini ve ileride bu çalışmanın nasıl geliştirilebileceğini tartışınız.
+Bu çalışmada İBB Açık Veri Portalından alınan veri üzerine birtakım analizler yapılmıştır. Şiddetlerine göre bina hasarları, yaşanan can kayıpları, yaralanmalar, doğalgaz boru hasarı ve atık su boru hasarı gibi değişkenler incelenmiştir. Özet istatistikler bölümünde depremin yarattığı hasarlar, can kaybı ve yaralanmalar ile ilgili ortalama verileri, standart sapma verileri, minimum ve maksimum verileri ile medyan verileri bulunmuştur.  Özet istatistiklere göre içme suyu boru hasarının ve atık su boru hasarının doğalgaz boru hasarına göre daha fazla ortalama değere sahip olması doğalgaz borularının içme suyu boruları ile atık su borularına göre daha sağlam olduğunu göstermektedir. Ayrıca hasarlı bina sayılarının ortalama değerleri incelendiğinde en fazla zarar gören binaların hafif hasarlı binalar olduğu görülmüştür.
+Korelasyon analizi sonucu binaların hasar derecelerinin can kaybı sayısına göre anlamlı bir ilişkiye sahip olduğu saptanmıştır.
+
 
 **Kaynakça bölümü Rmarkdown tarafından otomatik olarak oluşturulmaktadır. Taslak dosyada Kaynakça kısmında herhangi bir değişikliğe gerek yoktur.** 
 
