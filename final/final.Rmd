@@ -25,58 +25,42 @@ urlcolor: blue
 fontsize: 12pt
 biblio-style: apalike
 abstract: |
-  Bu çalışma İBB Açık Veri Portalından alınan “Deprem Senaryosu Analiz Sonuç” verisinden hareketle İstanbul kentinde beklenen, büyüklüğü 7.5 Mw olan senaryoya göre hazırlanmıştır. Çalışmada depremin zarar verebileceği binalara ve altyapı stoğu, yaşanabilecek can kayıpları ve yaralanmalar, ve geçici barınma değişkenleri üzerinde durulmuştur. İstanbul’da yıkıcı bir depremin meydana gelmesi hem ekonomik hem endüstriyel hem de sosyal ve kültürel  faaliyetleri durma noktasına getireceğinden gerekli önlemler alınmalıdır.
+  Bu çalışma İBB Açık Veri Portalından alınan “Deprem Senaryosu Analiz Sonuç” verisinden hareketle İstanbul kentinde beklenen, büyüklüğü 7.5 Mw olan senaryoya göre hazırlanmıştır. Çalışmada depremin zarar verebileceği binalara ve altyapı stoğu, yaşanabilecek can kayıpları ve yaralanmalar ve geçici barınma değişkenleri üzerinde durulmuştur. 960 gözlem içeren bir veri seti, İstanbul'un ilçeleri, mahalleleri, bina hasarları, can kayıpları, yaralanma durumları, hastanede tedavi sayıları, doğalgaz, atık su ve içme suyu boru hasarları ile geçici barınma sayılarını içermektedir. Veri setinin özet istatistikleri, deprem sonrası can kayıpları, yaralanmalar, bina hasarları ve altyapı sistemleri hakkında bilgi vermektedir. Bina hasarları incelendiğinde, çok ağır hasarlı binalardan hafif hasarlı binalara doğru maksimum ve ortalama değerlerde bir artış olduğu gözlemlenmiştir. Genellikle binalar orta ve hafif hasarlıdır, bu da bina stoklarının genel olarak daha düşük bir yıkıcı etkiye sahip olduğu sonucunu destekler. Boru hasarlarına bakıldığında, atık su borularında doğalgaz borularına göre daha fazla hasar olduğu görülmüştür. Bu durum, doğalgaz boru hatlarının daha sağlam bir yapıya sahip olduğu ve atık su boru hatlarına göre daha maliyetli olduğu varsayımını destekler. Yapılan veri analizinde korelasyon analizi ve basit regresyon analizi yöntemleri kullanılmıştır. Korelasyon analizi binaların aldıkları hasar ile yaşanan can kaybı arasında yapılmıştır. Analiz sonucuna göre çok ağır hasarlı, ağır hasarlı, orta hasarlı, hafif hasarları binalar ile can kayıpları arasında pozitif yönde bir ilişki olduğu gösterilmiştir. Regresyon analizi sonuçlarına göre çok ağır hasarlı bina sayısı ile can kaybı arasındaki ilişkinin anlamlı olduğunu gösteren düşük bir p-value değeri olduğunu görüyoruz (p-value = 2e-07). Ancak, ağır hasarlı, orta hasarlı ve hafif hasarlı bina sayıları ile can kaybı arasındaki ilişkilerin anlamsız olduğunu gösteren yüksek p-value değerleri olduğunu görüyoruz (p-value > 0.05). Bu durum, bu değişkenlerin can kaybı üzerinde anlamlı bir etkiye sahip olmadığını göstermektedir. Çok ağır hasarlı bina sayısı ile orta hasarlı bina sayısı arasındaki katsayıların pozitif, ağır hasarlı bina sayısı ile hafif hasarlı bina sayısı arasındaki katsayıların negatif olduğunu görüyoruz. Bu da çok ağır hasarlı ve orta hasarlı bina sayılarının can kaybıyla pozitif yönde ilişkili olduğunu, ağır hasarlı ve hafif hasarlı bina sayılarının ise can kaybıyla negatif yönde ilişkili olduğunu göstermektedir. Ayrıca, modelin açıklama gücü yüksek olup, bina hasarları değişkenlerinin yaklaşık %90 oranında can kaybını açıkladığı görülmektedir.
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 <!-- ======================================================================= -->
+
 <!-- ============================== NOTLAR ================================= -->
+
 <!-- ======================================================================= -->
-[^1]: 21080548, [Github Repo](https://github.com/hakanburakgunyel/Final.git)
-
-
+[^1]: 21080548, [Github Repo](https://github.com/hakanburakgunyel/Final)
 
 # Giriş
-6 Şubat 2023 tarihinde merkez üssü Kahramanmaraş olan, iki büyük şiddetli deprem gerçekleşmiştir. Resmi rakamlara göre yaklaşık 50.000 vatandaşımız hayatını kaybetmiştir. Yaşanan bu felaketten sonra akıllara beklenen İstanbul depreminin ne zaman olacağı, yaratacağı
-yıkımın nasıl bir şiddette olacağı soruları akla getirmiştir. Araştırmaya bu sorular üzerine
-başlanmaya karar verilmiştir. İlk olarak konuyla alakalı İstanbul Büyükşehir Belediyesi’nin
-İBB Açık Veri Portalı üzerinden yayınladığı “Deprem Senaryosu Analiz Sonuçları” adlı veri
-setini bulunmuştur. Veri seti 7.5 Mw büyüklüğünde gece olacak deprem senaryosuna göre
-yapılan analizlerin sonuçlarını içermektedir. Veri seti 960 gözlem, 16 gözlem içermektedir.
-Çalışma kolaylığı olması açısından gözlem sayısı elenerek çalışmaya eklenebilir.
 
-
-
+6 Şubat 2023 tarihinde merkez üssü Kahramanmaraş olan, iki büyük şiddetli deprem gerçekleşmiştir. Resmi rakamlara göre yaklaşık 50.000 vatandaşımız hayatını kaybetmiştir. Yaşanan bu felaketten sonra akıllara beklenen İstanbul depreminin ne zaman olacağı, yaratacağı yıkımın nasıl bir şiddette olacağı sorularını getirmiştir. Araştırmaya bu sorular üzerine başlanmaya karar verilmiştir. İlk olarak konuyla alakalı İstanbul Büyükşehir Belediyesi'nin İBB Açık Veri Portalı üzerinden yayınladığı "Deprem Senaryosu Analiz Sonuçları" adlı veri setibulunmuştur. Veri seti 7.5 Mw büyüklüğünde gece olacak deprem senaryosuna göre yapılan analizlerin sonuçlarını içermektedir. Veri seti960 gözlem, 16 gözlem içermektedir. Çalışma kolaylığı olması açısından gözlem sayısı elenerek çalışmaya eklenmiştir.
 
 ## Çalışmanın Amacı
-Çalışmanın amacı beklenen İstanbul depreminin yaratacağı hasarı İstanbul’un ilçeleri; mahalleleri; çok ağır, ağır, orta ve hafif hasarlı bina sayısı; can kaybı sayısı; ağır yaralı sayısı;
-hafif yaralı sayısı; hastanede tedavi sayısı; doğalgaz borusu, atık su borusu ve içme suyu
-borusu hasarı sayısı; geçici barınma sayıları değişkenleri üzerinden incelenmesini amaçlayan,
-içinde tablo ve grafiklerin bulunduğu istatiksel bir analiz yapmaktır.
 
-## Literatür 
+Çalışmanın amacı beklenen İstanbul depreminin yaratacağı hasarı İstanbul'un ilçeleri; mahalleleri; çok ağır, ağır, orta ve hafif hasarlıbina sayısı; can kaybı sayısı; ağır yaralı sayısı; hafif yaralı sayısı;hastanede tedavi sayısı; doğalgaz borusu, atık su borusu ve içme suyu borusu hasarı sayısı; geçici barınma sayıları değişkenleri üzerinden incelenmesini amaçlayan, içinde tablo ve grafiklerin bulunduğu istatiksel bir analiz yapmaktır.
 
-Depremler Dünyada kırık hatlar boyunca biriken enerjinin ani bir şekilde boşalması sonucu oluşan doğal afetlerdir. Dünya genelinde yılda 500.00 deprem olur ve bunların 100 ü binalara hasar verecek kadar güçlüdür. 17 Ağustos 1999 depreminden sonra yapılan araştırmalar Marmara Denizinde hala kırılmayan faylar olduğunu gösterir. Tom Parsons’ ın 2000 yılında yaptığı bir çalışma beklenen depremin 2000 ila 2030 yılları arasında olacağını gösterir. İstanbul,tarihi, coğrafyası, sosyal ve kültürel yönü bakımından oldukça zengin bir şehirdir. Büyük bir depremi yaşaması durumunda sadece Türkiye için değil, dünya birikimi açısından büyük bir kayıp yaşanır.[@csimcsek2021big]
-Türkiye deprem kuşağında olmasına rağmen olası depremin yaratacağı hasara karşı hazırlıksızdır. Şehirlerimizde hızlı ve yoğun kentleşme beraberinde plansız yapılaşmayı beraberinde getirir.  Bu da kayıpların önünü açacaktır. Marmara bölgesi tarihimizde büyük yıkıcı depremlerle karşılaşmıştır. Yapılan çalışmalar büyük bir depremin tekrar yaşanacağını öngörmektedir. Böyle bir duruma hazırlıklı olmayan İstanbul’ da ciddi sayılarda can ve mal kaybının yaşanacağı tahmin edilmektedir. [@uyar2023deprem]
-Deprem tehlikesi, arazi kullanımı, demografik yapı ve ekonomik yapı depremin riskini etkileyen temel faktörlerdir.  Depremin tehlikesini başta depremin büyüklüğü belirler. Konut alanlarındaki yoğunluk, nüfusun büyüklüğüyle doğru orantılıdır. Doğal afetler açısından bakıldığında en çok hasar yerler konut alanlarıdır. Konut alanlarının yapısal özelliklerinin belirlenmesi hasar tahmini yapmaya kolaylık sağlar. İstanbul’da depreme bağlı risk düzeylerini belirleyen ana bileşenler belirlenmiştir. Bu bağlamda hasar görebilirlik (mahallenin yaşı, yapı stoğu ve demografik yapısı incelenir), yoğunluk (mahalledeki yapı ve nüfus yoğunluğu incelenir), işyeri ve yanıcı/patlayıcı kullanımlar, tehlike (depremin yaratacağı ivme tepki spektrum değeri), ve potansiyeller (mahalledeki sağlık tesisi ve hasta yatak sayısı) incelenir. Sonuç olarak kentsel arazi kullanımı beraberinde nüfus yoğunluğunu getirir ve bahsedilen ana bileşenlerle birlikte depreme bağlı riski artırır. [@kundak2010istanbul]
-Deprem riskine karşı insanlara farkındalık eğitimi verilmeli; kentsel dönüşüm ve altyapı çalışmaları yapılarak önlemler alınmalıdır. Depremle ilgili gerekli kanuni önlemler alınmalı, zorunlu deprem sigortası vatandaşlara yaptırılmalıdır. Türkiye’nin en önemli sanayi ve finans merkezi olan İstanbul’da yıkıcı bir depremin meydana gelmesi ekonomi ve endüstri faaliyetlerini durma noktasına getirebilir. [@erdik2008earthquake]
+## Literatür
 
-# Veri 
-Veri seti, İstanbul Büyükşehir Belediyesi’nin İBB Açık Veri Portalı Üzerinden yayınladığı “Deprem Senaryosu Analiz Sonuçları” verisinden oluşmaktadır. Veri seti İstanbul’un ilçeleri; mahalleleri; çok ağır, ağır, orta ve hafif hasarlı bina sayısı; can kaybı sayısı; ağır yaralı sayısı; hafif yaralı sayısı; hastanede tedavi sayısı; doğalgaz borusu, atık su borusu ve içme suyu borusu hasarı sayısı; geçici barınma sayıları değişkenlerini içeren 960 gözlemden oluşan bir veri setidir. Gözlemlerin içinden çalışma kolaylığı açısından İstanbul’un nüfus bakımından en kalabalık ilçelerinden üç tanesi ( Esenyurt, Küçükçekmece, Pendik) seçilmiştir.
+Depremler Dünyada kırık hatlar boyunca biriken enerjinin ani bir şekilde boşalması sonucu oluşan doğal afetlerdir. Dünya genelinde yılda 500.000 deprem olur ve bunların 100 ü binalara hasar verecek kadar güçlüdür. 17 Ağustos 1999 depreminden sonra yapılan araştırmalar Marmara Denizinde hala kırılmayan faylar olduğunu gösterir. Tom Parsons' ın 2000 yılında yaptığı bir çalışma beklenen depremin 2000 ila 2030 yılları arasında  olacağını gösterir. İstanbul,tarihi, coğrafyası, sosyal ve kültürel yönü bakımından oldukça zengin bir şehirdir. Büyük bir depremi yaşaması durumunda sadece Türkiye için değil, dünya birikimi açısından büyük birkayıp yaşanır.[@csimcsek2021big] Türkiye deprem kuşağında olmasına rağmen olası depremin yaratacağı hasara karşı hazırlıksızdır.Şehirlerimizde hızlı ve yoğun kentleşme beraberinde plansız yapılaşmayı beraberinde getirir. Bu da kayıpların önünü açacaktır. Marmara bölgesi tarihimizde büyük yıkıcı depremlerle karşılaşmıştır. Yapılan çalışmalar büyük bir depremin tekrar yaşanacağını öngörmektedir. Böyle bir durumahazırlıklı olmayan İstanbul' da ciddi sayılarda can ve mal kaybının yaşanacağı tahmin edilmektedir. [@uyar2023deprem] Deprem tehlikesi,arazi kullanımı, demografik yapı ve ekonomik yapı depremin riskini etkileyen temel faktörlerdir. Depremin tehlikesini başta depremin büyüklüğü belirler. Konut alanlarındaki yoğunluk, nüfusun büyüklüğüyle doğru orantılıdır. Doğal afetler açısından bakıldığında en çok hasar alan yerler konut alanlarıdır. Konut alanlarının yapısal özelliklerinin belirlenmesi hasar tahmini yapmaya kolaylık sağlar. İstanbul'da depreme bağlı risk düzeylerini belirleyen ana bileşenler belirlenmiştir. Bu bağlamda hasar görebilirlik (mahallenin yaşı, yapı stoğu ve demografik yapısı incelenir), yoğunluk (mahalledeki yapı ve nüfus yoğunluğuincelenir), işyeri ve yanıcı/patlayıcı kullanımlar, tehlike (depremin yaratacağı ivme tepki spektrum değeri), ve potansiyeller (mahalledekisağlık tesisi ve hasta yatak sayısı) incelenir. Sonuç olarak kentsel arazi kullanımı beraberinde nüfus yoğunluğunu getirir ve bahsedilen ana bileşenlerle birlikte depreme bağlı riski artırır. [@kundak2010istanbul]Deprem riskine karşı insanlara farkındalık eğitimi verilmeli; kentsel dönüşüm ve altyapı çalışmaları yapılarak önlemler alınmalıdır. Depremle ilgili gerekli kanuni önlemler alınmalı, zorunlu deprem sigortası vatandaşlara yaptırılmalıdır. Türkiye'nin en önemli sanayi ve finansmerkezi olan İstanbul'da yıkıcı bir depremin meydana gelmesi ekonomi veendüstri faaliyetlerini durma noktasına getirebilir.[@erdik2008earthquake]
 
-Özet istatistikler aracılığıyla yaşanan deprem sonrası can kaybı sayısı, yaralanma sayısı, binalardaki hasarlar ve altyapı sistemleri hakkında ortalama, standart sapma, minimum, medyan ve maksimum değerleri hakkında bilgi vermektedir. Veri setine ait (Tablo \ref{tab:ozet})’de verilen özet istatistiklere göre çıkarımlar yapılabilir. Özet tablo bina hasarları bakımından incelendiğinde (çok ağır, ağır, orta, hafif hasarlı) hasarın şiddeti çok ağır hasarlıdan hafif hasarlıya geldikçe maksimum ve ortalama değerlerde doğru orantılı olarak bir artış gözlemleyebiliriz. Binaların çoğu orta ve hafif hasarlıdır.  Buradan bina stoklarının yıkıcı etkisinin genel olarak daha düşük olduğu varsayımı yapılabilir. Boru hasarı bakımından incelendiğinde atık su boru hasarının, doğalgaz boru hasarına göre daha fazla olduğunu görmekteyiz. Doğalgaz boru hattı atık su boru hattı yapımına göre daha maliyetli olduğu için daha sağlam yapıldığı varsayımını yapabiliriz.
+# Veri
 
+Veri seti, İstanbul Büyükşehir Belediyesi'nin İBB Açık Veri Portalı Üzerinden yayınladığı "Deprem Senaryosu Analiz Sonuçları" verisinden oluşmaktadır. Veri seti İstanbul'un ilçeleri; mahalleleri; çok ağır,ağır, orta ve hafif hasarlı bina sayısı; can kaybı sayısı; ağır yaralı sayısı; hafif yaralı sayısı; hastanede tedavi sayısı; doğalgaz borusu,atık su borusu ve içme suyu borusu hasarı sayısı; geçici barınma sayıları değişkenlerini içeren 960 gözlemden oluşan bir veri setidir.Gözlemlerin içinden çalışma kolaylığı açısından İstanbul'un nüfus bakımından en kalabalık ilçelerinden üç tanesi ( Esenyurt, Küçükçekmece,Pendik) seçilmiştir.Özet istatistikler aracılığıyla yaşanan deprem sonrası can kaybı sayısı,yaralanma sayısı, binalardaki hasarlar ve altyapı sistemleri hakkında ortalama, standart sapma, minimum, medyan ve maksimum değerleri hakkında bilgi vermektedir. Veri setine ait (Tablo \ref{tab:ozet})'de verilen özet istatistiklere göre çıkarımlar yapılabilir. Özet tablo bina hasarları bakımından incelendiğinde (çok ağır, ağır, orta, hafif hasarlı) hasarın şiddeti çok ağır hasarlıdan hafif hasarlıya geldikçe maksimum ve ortalama değerlerde doğru orantılı olarak bir artış gözlemleyebiliriz. Binaların çoğu orta ve hafif hasarlıdır. Buradan bina stoklarının yıkıcı etkisinin genel olarak daha düşük olduğu varsayımı yapılabilir. Boru hasarı bakımından incelendiğinde atık su boru hasarının, doğalgaz boru hasarına göre daha fazla olduğunu görmekteyiz.Doğalgaz boru hattı atık su boru hattı yapımına göre daha maliyetli olduğu için daha sağlam yapıldığı varsayımını yapabiliriz.
 
 ```{r, echo=FALSE}
 library(tidyverse)
 library(here)
-dt <- readxl::read_xlsx("C:/Users/Admin/Downloads/Final/data/data1.xlsx")
+dt <- readxl::read_xlsx("C:/Users/Admin/Desktop/Final/data/data1.xlsx")
 
 ```
-
- 
 
 ```{r, echo=FALSE}
 library(xtable) 
@@ -84,8 +68,6 @@ library(xtable)
 library(summarytools)
 st_options(lang = "tr")
 ```
-
-
 
 ```{r results='asis', echo=FALSE}
 dt %>%
@@ -97,16 +79,13 @@ dt %>%
   print(booktabs = TRUE, comment = FALSE, caption.placement = "top")
 ```
 
-
 # Yöntem ve Veri Analizi
-Regresyon analizine göre “can kaybı sayısı” bağımlı değişkendir. “Hafif hasarlı bina sayısı”, “orta hasarlı bina sayısı”, “ağır hasarlı bina sayısı” ve “çok ağır hasarlı bina sayısı” bağımsız değişken olarak belirlenmiştir. Analiz sonucu bağımsız değişkenlerin bağımlı değişken üzerinde anlamlı bir ilişkiye sahip olduğu belirlenmiştir.
 
-$$
-Y_t = \beta_0 + \beta_N N_t + \beta_P P_t + \beta_I I_t + \varepsilon_t
-$$
+Çok ağır hasarlı bina sayısı, ağır hasarlı bina sayısı, orta hasarlı bina sayısı ve hafif hasarlı bina sayısı verileri ile cab kaybı sayısı verisi arasında Pearson yöntemiyle korelasyon analizi yapılmıştır.
+Regresyon analizine göre "can kaybı sayısı" bağımlı değişkendir. "Hafif hasarlı bina sayısı", "orta hasarlı bina sayısı", "ağır hasarlı bina sayısı" ve "çok ağır hasarlı bina sayısı" bağımsız değişken olarak belirlenmiştir. Analiz sonucu bağımsız değişkenlerin bağımlı değişken üzerinde anlamlı bir ilişkiye sahip olduğu belirlenmiştir.
 
 
-
+## Korelasyon Analizi
 
 ```{r , echo=FALSE}
 cok_agir_hasarli_can_kaybi <- cor(dt$cok_agir_hasarli_bina_sayisi, dt$can_kaybi_sayisi, method = "pearson")
@@ -120,8 +99,22 @@ cat("Ağır hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyo
 cat("Orta hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", orta_hasarli_can_kaybi, "\n")
 cat("Hafif hasarlı bina sayısı ile can kaybı sayısı arasındaki korelasyon: ", hafif_hasarli_can_kaybi, "\n")
 ```
-```{r , echo=FALSE}
-model <- lm(can_kaybi_sayisi~cok_agir_hasarli_bina_sayisi + agir_hasarli_bina_sayisi + dt$orta_hasarli_bina_sayisi + hafif_hasarli_bina_sayisi, data = dt)
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Korelasyon Matrisi'}
+
+dt %>%
+select(cok_agir_hasarli_bina_sayisi, agir_hasarli_bina_sayisi, orta_hasarli_bina_sayisi, hafif_hasarli_bina_sayisi, can_kaybi_sayisi ) %>% 
+  
+GGally::ggpairs(columnLabels = c("Çok Ağır Hasarlı","Ağır Hasarlı", "Orta Hasarlı", "Hafif Hasarlı", "Can Kaybı")) + theme_bw(base_size = 8) 
+
+
+
+```
+
+## Regresyon Analizi
+
+```{r , echo=FALSE,}
+model <- lm(can_kaybi_sayisi~cok_agir_hasarli_bina_sayisi + agir_hasarli_bina_sayisi + orta_hasarli_bina_sayisi + hafif_hasarli_bina_sayisi, data = dt)
 
 summary(model)
 
@@ -130,31 +123,44 @@ summary(model)
 
 
 ```
-Bu çıktıya göre bazı çıkarımlar yapmak mümkündür. “residuals” bölümü bize artıklar hakkında bilgi vermektedir. İlk sütun parametrelerin tahminlenen değerlerini, ikinci sütun parametrelerin standart hata değerlerini, üçüncü ve dördüncü sütun ise sırasıyla t ve p değerlerini göstermektedir. Parametrelerin sıfıra eşit olup olmadığı hipotezini test etmek için bu değerler kullanılmıştır. Çoklu R-kare değeri belirtme katsayısını ifade eder. F -statistic ve p-value değerleri eğim parametresinin sıfıra eşit olup olmadığı hipotezini test etmek için kullanılmıştır. 
 
+Çıktıyı incelediğimizde Pr(\>\|t\|) sütunundan p-value değerlerini eldeedebiliriz. Bu değer 0.05 ' ten büyük olduğunda o değişkenin anlamsız olduğunu göstermektedir. İstatistikleri incelediğimizde çok ağır hasarlıbina sayısı ile can kaybı arasındaki p-value değeri 2e-07 olarak bulunmuştur. Buna göre çok ağır hasarlı bina sayısı ile can kaybı verileri arasında anlamlı bir ilişki olduğu görülebilir. Aynı şekilde ağır hasarlı bina sayısı, orta hasarlı bina sayısı ve hafif hasarlı bina sayısı verileri ile can kaybı verileri incelendiğinde p-value değerinin 0.05' ten büyük olduğunu görmekteyiz. Bu da bize belirtilen değişkenlerin anlamsız olduğunu, bağımlı değişken üzerinde bir etki yaratmadığını göstermektedir. Estimate sütunundaki değerler değişkenlerin katsayılarını ifade etmektedir. Katsayının negatif ve pozitif olması bağımlı değişken ile bağımsız değişken arasındaki ilişkinin de negatif veya pozitif olduğunu göstermektedir. İstatistikler incelendiğinde çok ağır hasarlı bina sayısı verisi ile orta hasarlı bina sayısı verilerinin katsayılarının pozitif, ağır hasarlı bina sayısı verileri ile hafif hasarlı bina sayıları verilerinin katsayılarının negatif olduğunu görmekteyiz. Buna göre çok ağır hasarlı bina sayısı verileri ve orta hasarlı bina sayısı verileri ile can kaybı sayısı verisi arasında pozitif yönde bir ilişki, ağır hasarlı bina sayısı verileri ve hafif hasarlı bina sayısı verileri ile can kaybı sayısı verisi arasında negatif yönde bir ilişki olduğunu görmekteyiz. Çıktı incelendiğinde Adjusted R-Squared değerinin 0.9115 olarak bulunduğunu görmekteyiz. Buna göre çok ağır hasarlı bina sayısı, ağır hasarlı bina sayısı, orta hasarlı bina sayısı, hafif hasarlı bina sayısı değişkenleri, can kaybı verisi üzerinde yaklaşık %90 oranında etkili olduğunu görmekteyiz.
 
+```{r, echo=FALSE, fig.cap='Çok Ağır Hasarlı Bina Sayısı İle Can Kaybı İlişkisinin Gösterimi'}
+ggplot(dt) + aes(x = dt$cok_agir_hasarli_bina_sayisi , y =dt$can_kaybi_sayisi ) + geom_point() + labs(x= "Çok Ağır Hasarlı", y= "Can Kaybı") + theme_bw() + geom_smooth(method = "lm", se = TRUE, color = "purple")
 
+```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center', fig.cap='Ağır Hasarlı Bina Sayısı İle Can Kaybı İlişkisinin Gösterimi'}
+ggplot(dt) + aes(x = dt$agir_hasarli_bina_sayisi , y =dt$can_kaybi_sayisi ) + geom_point() + labs(x= "Ağır Hasarlı", y= "Can Kaybı") + theme_bw() + geom_smooth(method = "lm", se = TRUE, color = "pink")
 
+```
 
-ggplot(dt , aes(x=dt$cok_agir_hasarli_bina_sayisi + dt$agir_hasarli_bina_sayisi + dt$orta_hasarli_bina_sayisi + dt$hafif_hasarli_bina_sayisi, y=dt$can_kaybi_sayisi))+
-         geom_point(size=4, color="blue", shape=20)+ geom_smooth(method=lm, se=FALSE, color="black")
+```{r, echo=FALSE, fig.align='center', fig.cap='Orta Hasarlı Bina Sayısı İle Can Kaybı İlişkisinin Gösterimi'}
+ggplot(dt) + aes(x = dt$orta_hasarli_bina_sayisi , y =dt$can_kaybi_sayisi ) + geom_point() + labs(x= "Orta Hasarlı", y= "Can Kaybı") + theme_bw() + geom_smooth(method = "lm", se = TRUE, color = "grey")
+
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Hafif Hasarlı Bina Sayısı İle Can Kaybı İlişkisinin Gösterimi'}
+
+ggplot(dt) + aes(x = dt$hafif_hasarli_bina_sayisi , y =dt$can_kaybi_sayisi ) + geom_point() + labs(x= "Hafif Hasarlı", y= "Can Kaybı") + theme_bw() + geom_smooth(method = "lm", se = TRUE, color = "cyan")
 
 ```
 
 
-
 # Sonuç
-Bu çalışmada İBB Açık Veri Portalından alınan veri üzerine birtakım analizler yapılmıştır. Şiddetlerine göre bina hasarları, yaşanan can kayıpları, yaralanmalar, doğalgaz boru hasarı ve atık su boru hasarı gibi değişkenler incelenmiştir. Özet istatistikler bölümünde depremin yarattığı hasarlar, can kaybı ve yaralanmalar ile ilgili ortalama verileri, standart sapma verileri, minimum ve maksimum verileri ile medyan verileri bulunmuştur.  Özet istatistiklere göre içme suyu boru hasarının ve atık su boru hasarının doğalgaz boru hasarına göre daha fazla ortalama değere sahip olması doğalgaz borularının içme suyu boruları ile atık su borularına göre daha sağlam olduğunu göstermektedir. Ayrıca hasarlı bina sayılarının ortalama değerleri incelendiğinde en fazla zarar gören binaların hafif hasarlı binalar olduğu görülmüştür.
-Korelasyon analizi sonucu binaların hasar derecelerinin can kaybı sayısına göre anlamlı bir ilişkiye sahip olduğu saptanmıştır.
 
+Bu çalışmada İBB Açık Veri Portalından alınan veri üzerine birtakım analizler yapılmıştır. Şiddetlerine göre bina hasarları, yaşanan cankayıpları, yaralanmalar, doğalgaz boru hasarı ve atık su boru hasarı gibi değişkenler incelenmiştir. Özet istatistikler bölümünde depremin yarattığı hasarlar, can kaybı ve yaralanmalar ile ilgili ortalama verileri, standart sapma verileri, minimum ve maksimum verileri ile medyan verileri bulunmuştur. Özet istatistiklere göre içme suyu boru hasarının ve atık su boru hasarının doğalgaz boru hasarına göre daha fazla ortalama değere sahip olması doğalgaz borularının içme suyuboruları ile atık su borularına göre daha sağlam olduğunugöstermektedir. Ayrıca hasarlı bina sayılarının ortalama değerleri incelendiğinde en fazla zarar gören binaların hafif hasarlı binalar olduğu görülmüştür. Korelasyon analizi sonucu binaların hasar derecelerinin can kaybı sayısına göre anlamlı bir ilişkiye sahip olduğu saptanmıştır.
 
-**Kaynakça bölümü Rmarkdown tarafından otomatik olarak oluşturulmaktadır. Taslak dosyada Kaynakça kısmında herhangi bir değişikliğe gerek yoktur.** 
+**Kaynakça bölümü Rmarkdown tarafından otomatik olarak
+oluşturulmaktadır. Taslak dosyada Kaynakça kısmında herhangi bir
+değişikliğe gerek yoktur.**
 
-**_Taslakta bu cümleden sonra yer alan hiçbir şey silinmemelidir._**
+***Taslakta bu cümleden sonra yer alan hiçbir şey silinmemelidir.***
 
 \newpage
-# Kaynakça {#references}
-<div id="refs"></div>
 
+# Kaynakça {#references}
+
+::: {#refs}
+:::
